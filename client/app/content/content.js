@@ -78,7 +78,7 @@ const post_endpoint = async (endpoint, data) => {
   }
 }
 
-
+let stop = false
 let personas = {
   
   nanny: {
@@ -150,6 +150,10 @@ const saveCurrentSite = async () => {
   // if(response) console.log('posted to firebase')
   // else console.log('failed to post to firebase')
 }
+
+
+// ___________________________________________TEACHER______________________________________________________
+
 
 
 // ___________________________________________COACH______________________________________________________
@@ -235,6 +239,7 @@ const main = async () => {
     
     let loop = null
     loop = setInterval(async () => {
+        // console.log('looping')
         const data = await get_endpoint('get_everything')
         if(!data){return}
 
@@ -262,6 +267,7 @@ const main = async () => {
         
         // ___________________________________________TEACHER______________________________________________________
         if (personas.teacher.active) {
+
         }
         
         // ___________________________________________COACH______________________________________________________
