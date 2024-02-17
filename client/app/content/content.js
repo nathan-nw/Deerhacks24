@@ -231,8 +231,8 @@ function updatejumpCounter(shoulder_position, hand_position) {
     jump = false; // Reset the squatting status
   }
 
-  console.log(jump);
-  console.log(jumpCounter);
+  //console.log(jump);
+  //console.log(jumpCounter);
 }
 
 const main = async () => {
