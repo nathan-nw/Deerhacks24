@@ -1,0 +1,37 @@
+{
+    "manifest_version": 3,
+    "name": "AAA",
+    "description": "deerhacks3",
+    "version": "1.3.8",
+
+    "permissions": [
+        "scripting",
+        "activeTab",
+        "storage",
+        "downloads"
+    ],
+    "host_permissions": ["<all_urls>"],
+    "web_accessible_resources":[
+        {
+            "resources": ["/app/*"],
+            "matches": ["<all_urls>"]
+        }
+    ],
+    "icons": {
+        "16": "./app/images/icon16.png"
+    },
+    "action": {
+        "default_icon": "./app/images/icon16.png"
+    },
+    "background": {
+        "service_worker": "./app/background/background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["./app/content/content.js"],
+            "css": ["./app/content/content.css"],
+            "run_at": "document_start"
+        }
+    ]
+}
