@@ -178,7 +178,7 @@ function updateSquatCounter(shoulder_position) {
     console.log("Squat detected. Total squats: " + squatCounter);
   }
 
-  console.log(isSquatting);
+  //console.log(isSquatting);
   //console.log(squatCounter);
 }
 
@@ -202,14 +202,14 @@ function updatePushCounter(shoulder_position) {
     push = false; // Reset the squatting status
   }
 
-  console.log(push);
+  //console.log(push);
   //console.log(pushCounter);
 }
 
 
 let jumpCounter = 0;
 let jump = false;
-const shoulderThreshold = {upper: 200, lower: 350}; // Adjust these based on your application's scale
+const shoulderThreshold = {upper: 175, lower: 175}; // Adjust these based on your application's scale
 const handThreshold = {upper: 175, lower: 250};
 // Function to be called with the y position of the shoulders
 function updatejumpCounter(shoulder_position, hand_position) {
