@@ -206,29 +206,51 @@ function updatePushCounter(shoulder_position) {
   //console.log(pushCounter);
 }
 
-
 let jumpCounter = 0;
 let jump = false;
 const shoulderThreshold = {upper: 175, lower: 175}; // Adjust these based on your application's scale
 const handThreshold = {upper: 175, lower: 250};
-// Function to be called with the y position of the shoulders
 function updatejumpCounter(shoulder_position, hand_position) {
-  // Example shoulder position: average Y position of left and right shoulder landmarks
-  // Normalize shoulderPositionY based on the camera view or pre-defined scale
 
-  // Detect push start (going down)
+  // Detect jumpingjack start (going down)
   if (shoulder_position[0][1] < shoulderThreshold.upper && shoulder_position[1][1] < shoulderThreshold.upper && hand_position[0][1] < handThreshold.upper && hand_position[1][1] < handThreshold.upper && !jump) {
     jump = true;
   }
 
-  // Detect squat end (coming up)
+  // Detect jumpingjack end (coming up)
   if (shoulder_position[0][1] >= shoulderThreshold.lower && shoulder_position [1][1] >= shoulderThreshold.lower && hand_position[0][1] >= handThreshold.lower && hand_position [1][1] >= handThreshold.lower && jump) {
     jumpCounter++;
-    jump = false; // Reset the squatting status
+    jump = false;
   }
 
   //console.log(jump);
   //console.log(jumpCounter);
+}
+
+
+let curlCounter = 0;
+let curl = false;
+const handCurlThreshold = {upper: 200, lower: 250};
+function updatecurlCounter(hand_position) {
+
+    const dotP = (hand_position[0][0]*hand_position[1][0]) + (hand_position[0][1]*hand_position[1][1]);
+    const mag1 = Math.sqrt((hand_position[0][0] * hand_position[0][0]) + (hand_position[0][1] * hand_position[0][1]))
+    const mag2 = Math.sqrt((hand_position[1][0] * hand_position[1][0]) + (hand_position[1][1] * hand_position[1][1]))
+    const angle = Math.cos((dotP/ (mag1 * mag2)))
+    
+    // Detect curl start (going down)
+  if (hand_position[0][1] < handThreshold.upper && hand_position[1][1] < handThreshold.upper && !jump) {
+    curl = true;
+  }
+
+  // Detect curl end (coming up)
+  if (hand_position[0][1] >= handThreshold.lower && hand_position [1][1] >= handThreshold.lower && jump) {
+    curlCounter++;
+    curl = false; // Reset the squatting status
+  }
+
+  console.log(curl);
+  console.log(curlCounter);
 }
 
 const main = async () => {
@@ -241,7 +263,7 @@ const main = async () => {
         const expression = data.expression
         const shoulder_position = data.shoulder_position
         const hand_position = data.hand_position
-        
+        let stop = false;
 
         // ___________________________________________NANNY______________________________________________________
         if (personas.nanny.active) {
@@ -271,6 +293,7 @@ const main = async () => {
             const test = updateSquatCounter(shoulder_position)
             const test1 = updatePushCounter(shoulder_position)
             const test2 = updatejumpCounter(shoulder_position, hand_position)
+            updatecurlCounter(hand_position)
             // console.log(test)
         }
 
