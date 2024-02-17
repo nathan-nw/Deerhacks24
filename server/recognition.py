@@ -29,6 +29,16 @@ def save_shoulder_position(left_shoulder, right_shoulder):
         response = requests.post(url, data=json.dumps(data), headers=headers)
     except Exception as e:
         print('Error:', e)    
+        
+def save_hand_position(left_hand, right_hand):
+    url = 'http://127.0.0.1:5000/save_hand_position'
+    data = {'position': [left_hand, right_hand]}
+    headers = {'Content-Type': 'application/json'}
+    
+    try:
+        response = requests.post(url, data=json.dumps(data), headers=headers)
+    except Exception as e:
+        print('Error:', e) 
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
@@ -87,6 +97,21 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
             
             save_shoulder_position([left_shoulder_x, left_shoulder_y], [right_shoulder_x, right_shoulder_y])
             
+        # Draw the pose landmarks on the frame
+        if results.pose_landmarks:
+            mp_drawing.draw_landmarks(
+                frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+            
+            left_hand = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST]
+            right_hand = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST]
+            # Convert from normalized coordinates to pixel coordinates
+            image_height, image_width, _ = frame.shape
+            left_hand_x = int(left_hand.x * image_width)
+            left_hand_y = int(left_hand.y * image_height)
+            right_hand_x = int(right_hand.x * image_width)
+            right_hand_y = int(right_hand.y * image_height)
+            
+            save_hand_position([left_hand_x, left_hand_y], [right_hand_x, right_hand_y])
             
         # Display the frame with pose landmarks and face detection
         cv2.imshow('Real-time Detection', frame)
