@@ -1,4 +1,4 @@
-const OPENAI_API_KEY = ''
+const OPENAI_API_KEY = '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'
 
 const GPT_INFO = {
     GPT_ENDPOINT: "https://api.openai.com/v1/chat/completions",

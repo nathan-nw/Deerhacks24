@@ -319,3 +319,40 @@ const main = async () => {
 }
 
 main()
+
+
+const keybind = {
+  shift: false,
+  button: false,
+}
+
+recognition = new webkitSpeechRecognition();
+recognition.continuous = true;
+recognition.interimResults = true;
+recognition.lang = "en-US";
+
+window.addEventListener('keydown', (event) => {if(event.key === 'Shift') keybind.shift = true})
+window.addEventListener('keyup', (event) => {if(event.key === 'Shift') keybind.shift = false})
+window.addEventListener('keydown', (event) => {if(event.key === 'P'){ 
+  if(!keybind.button){
+      console.log('starting speech recognition...')
+      recognition.start()
+  }
+  keybind.button = true
+}})
+window.addEventListener('keyup', (event) => {if(event.key === 'P') {
+  keybind.button = false
+  console.log('stopping speech recognition...')
+  recognition.stop()
+}})
+
+let speech = ''
+recognition.onresult = function (event) {
+  const result = event.results[event.results.length - 1];
+  const transcript = result[0].transcript;
+  speech = transcript
+}
+recognition.onend = async function (event) {        
+  console.log(speech)
+
+}
