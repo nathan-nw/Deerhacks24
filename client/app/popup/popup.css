@@ -23,7 +23,7 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 90%;
+    height: 100%;
 
     gap: 1rem;
     /* border-style: dotted; */
@@ -72,7 +72,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20%;
+    width: 30%;
     height: 100%;
 
     margin-left: 2rem;
@@ -113,31 +113,24 @@ body {
     overflow-y: auto;
 }
 
-.prompt{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+input {
     width: 100%;
-    height: 10%;
+    height: 3rem;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    background-color: transparent;
     
-    /* border-style: dotted; */
-}
-.prompt input{
-    width: 100%;
-    height: 100%;
     border: none;
+    outline:none;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: 'GTWalsheimPro-Regular', sans-serif;
     outline: none;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #000;
-
+    
     /* underline */
-    border-bottom: 1px solid #000;
+    border-bottom: 2px solid #000000;
 }
-
-.prompt input::placeholder{
-    /* color: #000; */
-    font-size: 1.5rem;
-    font-weight: bold;
+input:focus {
+    border-bottom: 2px solid #ffffff;
 }

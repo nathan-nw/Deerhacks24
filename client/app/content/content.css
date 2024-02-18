@@ -58,6 +58,9 @@
     backdrop-filter: blur(10px);
     border-radius: 1rem;
     padding: 1rem;
+
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .overlay .content .content-pic{

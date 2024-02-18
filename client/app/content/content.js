@@ -642,7 +642,7 @@ const main = async () => {
 
       const names = [data.nanny_name, data.coach_name, data.teacher_name]
       console.log(names)
-      if(speech.includes(names[0].toLowerCase())) {
+      if(speech.includes(names[0].toLowerCase()) || speech.includes('nanny')) {
         // nanny
         closeOverlay()
         startNannyOverlay(4)
@@ -657,7 +657,7 @@ const main = async () => {
         
         contentBottom.innerHTML = content
         
-      } else if (speech.includes(names[1].toLowerCase())) {
+      } else if (speech.includes(names[1].toLowerCase()) || speech.includes('coach')) {
         // coach
         closeOverlay()
         startCoachOverlay(4)
@@ -671,7 +671,7 @@ const main = async () => {
         
         contentBottom.innerHTML = content
 
-      } else if (speech.includes(names[2].toLowerCase())) {
+      } else if (speech.includes(names[2].toLowerCase())||speech.includes('teacher')) {
         // teacher
         closeOverlay()
         startTeacherOverlay()
