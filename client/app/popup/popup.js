@@ -53,6 +53,27 @@ const queryChat = async (chatHistory, imageData = null, chat_model = 0) => {
     }
 }
 
+function changeName(role, name) {
+    fetch('/save_name/' + role, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: name }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data.status === 'ok') {
+            document.getElementById(role).querySelector('.text').textContent = 'talk to me, ' + name + '!';
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 
 const chatHistory = [
     {

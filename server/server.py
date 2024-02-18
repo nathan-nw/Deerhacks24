@@ -99,51 +99,28 @@ def getExpression():
     return jsonify({'status': 'ok', 'expression': last_expression})
 
 # Saving Names _______________________________________________________________________________________
+
 nanny_name = 'Sally'
-
-@app.route('/save_name', methods=['POST'])
-def save_nanny_name():
-    global nanny_name
-    
-    data = request.json
-    print(data)
-    
-    if 'name' not in data:
-        return jsonify({'status': 'error', 'message': 'name not found'})
-    
-    nanny_name = data['name']
-    
-    return jsonify({'status': 'ok'})
-
 coach_name = 'Sam'
-
-@app.route('/save_name', methods=['POST'])
-def save_coach_name():
-    global coach_name
-    
-    data = request.json
-    print(data)
-    
-    if 'name' not in data:
-        return jsonify({'status': 'error', 'message': 'name not found'})
-    
-    coach_name = data['name']
-    
-    return jsonify({'status': 'ok'})
-
 teacher_name = 'Alex'
 
-@app.route('/save_name', methods=['POST'])
-def save_teacher_name():
-    global teacher_name
-    
+@app.route('/save_name/<role>', methods=['POST'])
+def save_name(role):
+    global nanny_name, coach_name, teacher_name
     data = request.json
-    print(data)
-    
     if 'name' not in data:
         return jsonify({'status': 'error', 'message': 'name not found'})
     
-    teacher_name = data['name']
-    
-    return jsonify({'status': 'ok'})
+    if role == 'nanny':
+        nanny_name = data['name']
+    elif role == 'coach':
+        coach_name = data['name']
+    elif role == 'teacher':
+        teacher_name = data['name']
+    else:
+        return jsonify({'status': 'error', 'message': 'Invalid role'})
 
+    return jsonify({'status': 'ok', 'newName': data['name']})
+
+if __name__ == '__main__':
+    app.run(debug=True)
