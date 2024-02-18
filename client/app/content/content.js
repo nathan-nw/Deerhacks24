@@ -103,9 +103,24 @@ let personas = {
   
   coach: {
     active: true,
-
+    blackListSites: [
+      'https://www.ubereats.com/ca',
+      'https://www.skipthedishes.com/ca',
+    ],
+    quotes: [
+      'You are stronger than you think',
+      'You are capable of anything',
+      'You are a winner',
+      'You are a champion',
+      'Keep going, you are doing great',
+      'Only a few more to go',
+    ]
   }
 
+}
+
+const randomInt = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 // ___________________________________________NANNY______________________________________________________
@@ -124,10 +139,10 @@ const isWithinActiveHours = () => {
   return false
 }
 
-const isBlackListedSite = () => {
+const isBlackListedSite = (sites) => {
   const current_url = window.location.href
-  for (let i = 0; i < personas.nanny.blackListSites.length; i++) {
-      const blackListSite = personas.nanny.blackListSites[i]
+  for (let i = 0; i < sites.length; i++) {
+      const blackListSite = sites[i]
       if (current_url === blackListSite) {
           return true
       }
@@ -256,7 +271,6 @@ function updatecurlCounter(hand_position, shoulder_position, elbo_position) {
 }
 
 
-
 const overlay = document.createElement('div')
 overlay.className = 'overlay'
 const img = document.createElement('img')
@@ -286,28 +300,43 @@ const main = async () => {
     squatCounter = 0
     pushCounter = 0
     curlCounter = 0
-    const loop = setInterval(async () => {
+    img.src = await chrome.runtime.getURL('app/images/coach (1).gif')
 
+    let lastCount = 0
+    const voiceNum = 0
+    const loop = setInterval(async () => {
       switch (command) {
-      case 'squat':
+      case 0:
         contentTop.innerHTML = `Do ${num} Squats`
         contentBottom.innerHTML = `Squats Completed: ${squatCounter}`
         if(squatCounter >= num) {clearInterval(loop);closeOverlay()}
+        if(squatCounter > lastCount) {
+          lastCount = squatCounter
+        }
         break
-        case 'curl':
+        case 1:
           contentTop.innerHTML = `Do ${num} Bicep Curls`
           contentBottom.innerHTML = `Curls Completed: ${curlCounter}`
           if(curlCounter >= num) {clearInterval(loop);closeOverlay()}
+          if(curlCounter > lastCount) {
+            lastCount = curlCounter
+          }
       break
-      case 'jump':
+      case 2:
         contentTop.innerHTML = `Do ${num} Jumping Jacks`
         contentBottom.innerHTML = `Jumping Jacks Completed: ${jumpCounter}`
         if(jumpCounter >= num) {clearInterval(loop);closeOverlay()}
+        if(jumpCounter > lastCount) {
+          lastCount = jumpCounter
+        }
         break
-      case 'push':
+      case 3:
         contentTop.innerHTML = `Do ${num} Pushups`
         contentBottom.innerHTML = `Pushups Completed: ${pushCounter}`
         if(pushCounter >= num) {clearInterval(loop);closeOverlay()}
+        if(pushCounter > lastCount) {
+          lastCount = pushCounter
+        }
         break
       default:
         clearInterval(loop)
@@ -320,9 +349,9 @@ const main = async () => {
   overlay.appendChild(img)
   overlay.appendChild(content)
   document.body.appendChild(overlay)
-  // closeOverlay()
-  startCoachOverlay('squat', 10)
+  closeOverlay()
 
+  if (isBlackListedSite(personas.coach.blackListSites)) startCoachOverlay(randomInt(0, 3), randomInt(3, 5))
     
     let loop = null
     loop = setInterval(async () => {
@@ -340,7 +369,7 @@ const main = async () => {
         if (personas.nanny.active) {
 
           const withinActiveHours = isWithinActiveHours()
-            const blackListedSite = isBlackListedSite()
+            const blackListedSite = isBlackListedSite(personas.nanny.blackListSites)
     
             if (!withinActiveHours && blackListedSite) {
                 console.log('You are on a blacklisted site during active hours')
