@@ -265,7 +265,74 @@ function updatecurlCounter(hand_position, shoulder_position, elbo_position) {
   console.log(curlCounter);
 }
 
+
+
+const overlay = document.createElement('div')
+overlay.className = 'overlay'
+const img = document.createElement('img')
+const content = document.createElement('div')
+content.className = 'content'
+
+const contentTop = document.createElement('div')
+contentTop.className = 'content-top'
+const contentBottom = document.createElement('div')
+contentBottom.className = 'content-bottom'
+
+content.appendChild(contentTop)
+content.appendChild(contentBottom)
+
 const main = async () => {
+  const openOverlay = async () => {
+    overlay.style.opacity = 1
+    overlay.style.pointerEvents = 'all'
+  }
+  const closeOverlay = async () => {
+    overlay.style.opacity = 0
+    overlay.style.pointerEvents = 'none'
+  }
+  const startCoachOverlay = async (command, num) => {
+    openOverlay()
+    jumpCounter = 0
+    squatCounter = 0
+    pushCounter = 0
+    curlCounter = 0
+    const loop = setInterval(async () => {
+
+      switch (command) {
+      case 'squat':
+        contentTop.innerHTML = `Do ${num} Squats`
+        contentBottom.innerHTML = `Squats Completed: ${squatCounter}`
+        if(squatCounter >= num) {clearInterval(loop);closeOverlay()}
+        break
+        case 'curl':
+          contentTop.innerHTML = `Do ${num} Bicep Curls`
+          contentBottom.innerHTML = `Curls Completed: ${curlCounter}`
+          if(curlCounter >= num) {clearInterval(loop);closeOverlay()}
+      break
+      case 'jump':
+        contentTop.innerHTML = `Do ${num} Jumping Jacks`
+        contentBottom.innerHTML = `Jumping Jacks Completed: ${jumpCounter}`
+        if(jumpCounter >= num) {clearInterval(loop);closeOverlay()}
+        break
+      case 'push':
+        contentTop.innerHTML = `Do ${num} Pushups`
+        contentBottom.innerHTML = `Pushups Completed: ${pushCounter}`
+        if(pushCounter >= num) {clearInterval(loop);closeOverlay()}
+        break
+      default:
+        clearInterval(loop)
+        ;closeOverlay()
+        break
+      }
+      }, 200)
+  }
+  img.src = await chrome.runtime.getURL('app/images/test.gif')
+  overlay.appendChild(img)
+  overlay.appendChild(content)
+  document.body.appendChild(overlay)
+  // closeOverlay()
+  startCoachOverlay('squat', 10)
+
     
     let loop = null
     loop = setInterval(async () => {
