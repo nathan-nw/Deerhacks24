@@ -40,6 +40,16 @@ def save_hand_position(left_hand, right_hand):
     except Exception as e:
         print('Error:', e) 
 
+def save_elbo_position(left_elbo, right_elbo):
+    url = 'http://127.0.0.1:5000/save_elbo_position'
+    data = {'position': [left_elbo, right_elbo]}
+    headers = {'Content-Type': 'application/json'}
+    
+    try:
+        response = requests.post(url, data=json.dumps(data), headers=headers)
+    except Exception as e:
+        print('Error:', e)
+         
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
@@ -112,6 +122,23 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
             right_hand_y = int(right_hand.y * image_height)
             
             save_hand_position([left_hand_x, left_hand_y], [right_hand_x, right_hand_y])
+            
+            
+        # Draw the pose landmarks on the frame
+        if results.pose_landmarks:
+            mp_drawing.draw_landmarks(
+                frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+            
+            left_elbo = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW]
+            right_elbo = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW]
+            # Convert from normalized coordinates to pixel coordinates
+            image_height, image_width, _ = frame.shape
+            left_elbo_x = int(left_elbo.x * image_width)
+            left_elbo_y = int(left_elbo.y * image_height)
+            right_elbo_x = int(right_elbo.x * image_width)
+            right_elbo_y = int(right_elbo.y * image_height)
+            
+            save_elbo_position([left_elbo_x, left_elbo_y], [right_elbo_x, right_elbo_y])
             
         # Display the frame with pose landmarks and face detection
         cv2.imshow('Real-time Detection', frame)

@@ -234,21 +234,29 @@ function updatejumpCounter(shoulder_position, hand_position) {
 
 let curlCounter = 0;
 let curl = false;
-const handCurlThreshold = {upper: 200, lower: 250};
-function updatecurlCounter(hand_position) {
+//const handCurlThreshold = {upper: 200, lower: 250};
 
-    const dotP = (hand_position[0][0]*hand_position[1][0]) + (hand_position[0][1]*hand_position[1][1]);
-    const mag1 = Math.sqrt((hand_position[0][0] * hand_position[0][0]) + (hand_position[0][1] * hand_position[0][1]))
-    const mag2 = Math.sqrt((hand_position[1][0] * hand_position[1][0]) + (hand_position[1][1] * hand_position[1][1]))
-    const angle = Math.cos((dotP/ (mag1 * mag2)))
+// curl for left hand
+function updatecurlCounter(hand_position, shoulder_position, elbo_position) {
+
+  // Elbo and shoulder
+  const mag1 = Math.sqrt(Math.pow((shoulder_position[0][0]- elbo_position[0][0]) , 2) + Math.pow((shoulder_position[0][1] - elbo_position[0][1]), 2))
+  
+  // Elbo and hand
+  const mag2 = Math.sqrt(Math.pow((hand_position[0][0]- elbo_position[0][0]) , 2) + Math.pow((hand_position[0][1] - elbo_position[0][1]), 2))
+  
+  const dotP = ((shoulder_position[0][0]- elbo_position[0][0]) * (hand_position[0][0]- elbo_position[0][0])) + ((shoulder_position[0][1] - elbo_position[0][1]) * (hand_position[0][1] - elbo_position[0][1]));
+  const angle = Math.acos((dotP/ (mag1 * mag2)))
+
+    console.log(angle)
     
     // Detect curl start (going down)
-  if (hand_position[0][1] < handThreshold.upper && hand_position[1][1] < handThreshold.upper && !jump) {
+  if (angle > (Math.PI/2) && !curl) {
     curl = true;
   }
 
   // Detect curl end (coming up)
-  if (hand_position[0][1] >= handThreshold.lower && hand_position [1][1] >= handThreshold.lower && jump) {
+  if (angle <= (Math.PI/2) && curl) {
     curlCounter++;
     curl = false; // Reset the squatting status
   }
@@ -268,6 +276,7 @@ const main = async () => {
         const expression = data.expression
         const shoulder_position = data.shoulder_position
         const hand_position = data.hand_position
+        const elbo_position = data.elbo_position
         let stop = false;
 
         // ___________________________________________NANNY______________________________________________________
@@ -296,11 +305,12 @@ const main = async () => {
         if (personas.coach.active) {
             console.log(shoulder_position)
             console.log(hand_position)
+            console.log(elbo_position)
             const test = updateSquatCounter(shoulder_position)
             const test1 = updatePushCounter(shoulder_position)
             const test2 = updatejumpCounter(shoulder_position, hand_position)
-            updatecurlCounter(hand_position)
-            // console.log(test)
+            updatecurlCounter(hand_position, shoulder_position, elbo_position)
+            //console.log(test)
         }
 
         if (stop) {clearInterval(loop)}
