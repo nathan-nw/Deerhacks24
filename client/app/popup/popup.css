@@ -1,0 +1,144 @@
+@font-face {font-family: 'GTWalsheimPro-Regular';src: url('https://cdn.shopify.com/s/files/1/0588/4228/4186/files/GTWalsheimPro-Regular.woff?v=1669253354') format('woff');} 
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'GTWalsheimPro-Regular', sans-serif;
+}
+
+body {
+    height: calc(561px - 2rem);
+    width: calc(332px - 2rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+
+    padding:1rem;
+}
+
+.chats{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 90%;
+
+    gap: 1rem;
+    /* border-style: dotted; */
+}
+
+.chats .chat{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid #000;
+    
+    /* background-image: url('https://img.freepik.com/free-vector/gradient-grainy-texture_23-2148981502.jpg?w=1060&t=st=1708209113~exp=1708209713~hmac=da44ff4cfc61a0e1fb30311cfe01286de4394fdf9f10a42c5e0a0f66e5566864'); */
+    
+    overflow: hidden;
+    
+    /* border-style: dotted; */
+}
+.chats .chat:nth-child(1){
+    background-image: url('https://img.freepik.com/free-vector/gradient-grainy-texture_23-2148981502.jpg?w=1060&t=st=1708209113~exp=1708209713~hmac=da44ff4cfc61a0e1fb30311cfe01286de4394fdf9f10a42c5e0a0f66e5566864');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    border-radius: 1rem;
+}
+.chats .chat:nth-child(2){
+    background-image: url('https://img.freepik.com/free-vector/gradient-grainy-gradient-background_23-2149903371.jpg?w=1060&t=st=1708209223~exp=1708209823~hmac=1fd3f0e949c7bfee691b317b603e516b27003ef41314431c2448babb14cf6f8b');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    border-radius: 1rem;
+}
+.chats .chat:nth-child(3){
+    background-image: url('https://img.freepik.com/free-vector/dynamic-gradient-grainy-background_52683-101975.jpg?w=1060&t=st=1708209266~exp=1708209866~hmac=aea5429ea2a105316e4e18d6a021c9198fa7e36b3cd41e8f59afe7c58b366799');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    border-radius: 1rem;
+}
+
+.chat .icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    height: 100%;
+
+    margin-left: 2rem;
+    margin-right: 2rem;
+    
+    /* border-style: dotted; */
+}
+
+.chat .icon img{
+    width: 100%;
+    aspect-ratio: 1/1;
+    /* height: 100%; */
+    object-fit: cover;
+    border-radius: 50%;
+    padding:1rem;
+    backdrop-filter: blur(10px);
+    background-color: #7272722e;
+
+    border: #ffffff4c 3px solid;
+}
+
+.chat .text{
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    justify-content: center;
+    width: 70%;
+    height: calc(100% - 1rem);
+
+    padding:0.5rem;
+
+    color: #fff;
+
+    background-color: transparent;
+    /* border-style: dotted; */
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.prompt{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 10%;
+    
+    /* border-style: dotted; */
+}
+.prompt input{
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000;
+
+    /* underline */
+    border-bottom: 1px solid #000;
+}
+
+.prompt input::placeholder{
+    /* color: #000; */
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
