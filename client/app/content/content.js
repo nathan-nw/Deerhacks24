@@ -1,13 +1,14 @@
-const OPENAI_API_KEY = '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'
+const pp = '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'
 
 const GPT_INFO = {
     GPT_ENDPOINT: "https://api.openai.com/v1/chat/completions",
     GPT_IMAGE_MODAL: "gpt-4-vision-preview",
     GPT_TEXT_MODAL: "gpt-4",
-    API_KEY: OPENAI_API_KEY
+    API_KEY: pp
 }
 
-const chatGPT_Image_Query  = async (chatHistory, imageData) => {
+const chatGPT_Image_Query  = async (chatHistory) => {
+  console.log('image')
     const response = await fetch(GPT_INFO.GPT_ENDPOINT, {
         method: 'POST',
         headers: {
@@ -851,7 +852,7 @@ const highlighterMain = async () => {
         queryElement.addEventListener('keyup', async (e) => {
             if(e.key === 'Enter') {
                 console.log(queryElement.value)
-                console.log(highlight_imageData)
+                // console.log(highlight_imageData)
                 
                 
                 const chatHistory = [
@@ -866,7 +867,7 @@ const highlighterMain = async () => {
                     content: [
                       {
                         type: 'text',
-                        content: queryElement.value
+                        text: queryElement.value
                       },
                       {
                         type: 'image_url',
@@ -882,7 +883,7 @@ const highlighterMain = async () => {
                 queryElement.value = ''
 
                 console.log('submitting')
-                queryChat(chatHistory, highlight_imageData, 0).then((response) => {
+                chatGPT_Image_Query(chatHistory).then((response) => {
                   console.log(response)
                 })
             }
