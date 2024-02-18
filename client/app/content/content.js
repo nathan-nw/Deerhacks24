@@ -106,6 +106,14 @@ let personas = {
     blackListSites: [
       'https://www.ubereats.com/ca',
       'https://www.skipthedishes.com/ca',
+    ],
+    quotes: [
+      'You are stronger than you think',
+      'You are capable of anything',
+      'You are a winner',
+      'You are a champion',
+      'Keep going, you are doing great',
+      'Only a few more to go',
     ]
   }
 
@@ -263,7 +271,6 @@ function updatecurlCounter(hand_position, shoulder_position, elbo_position) {
 }
 
 
-
 const overlay = document.createElement('div')
 overlay.className = 'overlay'
 const img = document.createElement('img')
@@ -293,28 +300,43 @@ const main = async () => {
     squatCounter = 0
     pushCounter = 0
     curlCounter = 0
-    const loop = setInterval(async () => {
+    img.src = await chrome.runtime.getURL('app/images/coach (1).gif')
 
+    let lastCount = 0
+    const voiceNum = 0
+    const loop = setInterval(async () => {
       switch (command) {
       case 0:
         contentTop.innerHTML = `Do ${num} Squats`
         contentBottom.innerHTML = `Squats Completed: ${squatCounter}`
         if(squatCounter >= num) {clearInterval(loop);closeOverlay()}
+        if(squatCounter > lastCount) {
+          lastCount = squatCounter
+        }
         break
         case 1:
           contentTop.innerHTML = `Do ${num} Bicep Curls`
           contentBottom.innerHTML = `Curls Completed: ${curlCounter}`
           if(curlCounter >= num) {clearInterval(loop);closeOverlay()}
+          if(curlCounter > lastCount) {
+            lastCount = curlCounter
+          }
       break
       case 2:
         contentTop.innerHTML = `Do ${num} Jumping Jacks`
         contentBottom.innerHTML = `Jumping Jacks Completed: ${jumpCounter}`
         if(jumpCounter >= num) {clearInterval(loop);closeOverlay()}
+        if(jumpCounter > lastCount) {
+          lastCount = jumpCounter
+        }
         break
       case 3:
         contentTop.innerHTML = `Do ${num} Pushups`
         contentBottom.innerHTML = `Pushups Completed: ${pushCounter}`
         if(pushCounter >= num) {clearInterval(loop);closeOverlay()}
+        if(pushCounter > lastCount) {
+          lastCount = pushCounter
+        }
         break
       default:
         clearInterval(loop)
@@ -329,7 +351,7 @@ const main = async () => {
   document.body.appendChild(overlay)
   closeOverlay()
 
-  if (isBlackListedSite(personas.coach.blackListSites)) startCoachOverlay(randomInt(0, 3), randomInt(5, 10))
+  if (isBlackListedSite(personas.coach.blackListSites)) startCoachOverlay(randomInt(0, 3), randomInt(3, 5))
     
     let loop = null
     loop = setInterval(async () => {
