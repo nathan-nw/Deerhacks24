@@ -1,4 +1,4 @@
-const OPENAI_API_KEY = ''
+const OPENAI_API_KEY = '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'
 
 const GPT_INFO = {
     GPT_ENDPOINT: "https://api.openai.com/v1/chat/completions",
@@ -17,6 +17,8 @@ const chatGPT_Image_Query  = async (chatHistory, imageData) => {
         body: JSON.stringify({
             model: GPT_INFO.GPT_IMAGE_MODAL,
             messages: chatHistory,
+            max_tokens: 80,
+            temperature: 0.75
         })
     })
     return await response.json()
@@ -32,6 +34,8 @@ const chatGPT_Text_Query  = async (chatHistory) => {
         body: JSON.stringify({
             model: GPT_INFO.GPT_TEXT_MODAL,
             messages: chatHistory,
+            max_tokens: 80,
+            temperature: 0.75
         })
     })
     return await response.json()
@@ -49,12 +53,13 @@ const queryChat = async (chatHistory, imageData = null, chat_model = 0) => {
     }
 }
 
+
 const chatHistory = [
     {
         messages: [
             {
                 role: 'system',
-                content: 'You are a nanny. you monitor the child\'s activity and block certain websites'
+                content: 'You are a nanny, refer to yourself as a nanny. you monitor the child\'s activity and block certain websites'
             }
         ]
     },
@@ -70,7 +75,7 @@ const chatHistory = [
         messages: [
             {
                 role: 'system',
-                content: 'You are a fitness coach. You monitor the child\'s activity and provide feedback as a fitness. You only care about helping me meet my fitness goals'
+                content: 'You are a fitness coach. You monitor the child\'s activity and provide feedback as a fitness. You only care about helping me meet my fitness goals.'
             }
         ]
     }
