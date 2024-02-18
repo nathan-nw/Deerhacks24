@@ -1,4 +1,4 @@
-const OPENAI_API_KEY = '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'
+const OPENAI_API_KEY = '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'
 
 const GPT_INFO = {
     GPT_ENDPOINT: "https://api.openai.com/v1/chat/completions",
@@ -17,6 +17,8 @@ const chatGPT_Image_Query  = async (chatHistory, imageData) => {
         body: JSON.stringify({
             model: GPT_INFO.GPT_IMAGE_MODAL,
             messages: chatHistory,
+            max_tokens: 80,
+            temperature: 0.75
         })
     })
     return await response.json()
@@ -32,6 +34,8 @@ const chatGPT_Text_Query  = async (chatHistory) => {
         body: JSON.stringify({
             model: GPT_INFO.GPT_TEXT_MODAL,
             messages: chatHistory,
+            max_tokens: 80,
+            temperature: 0.75
         })
     })
     return await response.json()
@@ -49,12 +53,51 @@ const queryChat = async (chatHistory, imageData = null, chat_model = 0) => {
     }
 }
 
+const get_endpoint = async (endpoint) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/${endpoint}`,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        return await response.json()
+    }
+    catch (e) {
+        console.log(e)
+        return null
+    }
+  }
+
+async function changeName(role, name) {
+
+    await fetch('http://127.0.0.1:5000/save_name', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name:name, role:role}),
+    })
+    // .then(response => response.json())
+    // .then(data => {
+    //     console.log(data);
+    //     if (data.status === 'ok') {
+    //         document.getElementById(role).querySelector('.text').textContent = 'talk to me, ' + name + '!';
+    //     } else {
+    //         alert(data.message);
+    //     }
+    // })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
 const chatHistory = [
     {
         messages: [
             {
                 role: 'system',
-                content: 'You are a nanny. you monitor the child\'s activity and block certain websites'
+                content: 'You are a nanny, refer to yourself as a nanny. you monitor the child\'s activity and block certain websites'
             }
         ]
     },
@@ -70,11 +113,26 @@ const chatHistory = [
         messages: [
             {
                 role: 'system',
-                content: 'You are a fitness coach. You monitor the child\'s activity and provide feedback as a fitness. You only care about helping me meet my fitness goals'
+                content: 'You are a fitness coach. You monitor the child\'s activity and provide feedback as a fitness. You only care about helping me meet my fitness goals.'
             }
         ]
     }
 ]
+
+const getSavedName = (role)=>{
+    const data = get_endpoint('get_everything')
+    if(!data){return null}
+    
+    const nanny_name = nanny_name
+    const teacher_name = teacher_name
+    const coach_name = coach_name
+}
+
+const getChatHistory = (role) =>{
+    const name = 'replace with func' //get saved name
+    chatHistory[role].messages[0].content = `Your name is ${name}. ` + chatHistory[role].messages[0].content
+    return chatHistory[role].messages[0].content
+}
 
 const typeOutTest = (text, textElement) => {
     textElement.innerHTML = ''
@@ -102,7 +160,7 @@ const showTextInPopup = (text, person) => {
     }
 }
 
-const input = document.querySelector('input');
+const input = document.querySelector('#prompt-input');
 input.addEventListener('keydown', (event) => {
     console.log('keydown');
 
@@ -123,5 +181,18 @@ input.addEventListener('keydown', (event) => {
         // console.log(data)
         showTextInPopup(data, i)
 
+    })
+})
+
+const nanny = document.getElementById('nanny')
+const coach = document.getElementById('coach')
+const teacher = document.getElementById('teacher')
+const personaEements = [nanny, coach, teacher]
+
+personaEements.forEach((persona, index)=>{
+    console.log(persona)
+    const input = persona.querySelector('input')
+    input.addEventListener('keydown', ()=>{
+        changeName(index, input.value)
     })
 })
