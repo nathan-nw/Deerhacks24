@@ -53,6 +53,22 @@ const queryChat = async (chatHistory, imageData = null, chat_model = 0) => {
     }
 }
 
+const get_endpoint = async (endpoint) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/${endpoint}`,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        return await response.json()
+    }
+    catch (e) {
+        console.log(e)
+        return null
+    }
+  }
+
 async function changeName(role, name) {
 
     await fetch('http://127.0.0.1:5000/save_name', {
@@ -102,6 +118,21 @@ const chatHistory = [
         ]
     }
 ]
+
+const getSavedName = (role)=>{
+    const data = get_endpoint('get_everything')
+    if(!data){return null}
+    
+    const nanny_name = nanny_name
+    const teacher_name = teacher_name
+    const coach_name = coach_name
+}
+
+const getChatHistory = (role) =>{
+    const name = 'replace with func' //get saved name
+    chatHistory[role].messages[0].content = `Your name is ${name}. ` + chatHistory[role].messages[0].content
+    return chatHistory[role].messages[0].content
+}
 
 const typeOutTest = (text, textElement) => {
     textElement.innerHTML = ''

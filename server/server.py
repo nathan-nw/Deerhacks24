@@ -76,7 +76,7 @@ def getElboPosition():
 @app.route('/get_everything', methods=['Get'])
 def getEverything():
     global last_expression, last_shoulder_position
-    return jsonify({'status': 'ok', 'expression': last_expression, 'shoulder_position': last_shoulder_position, 'hand_position': last_hand_position, 'elbo_position': last_elbo_position})
+    return jsonify({'status': 'ok', 'expression': last_expression, 'shoulder_position': last_shoulder_position, 'hand_position': last_hand_position, 'elbo_position': last_elbo_position, 'nanny_name': nanny_name, 'coach_name': coach_name, 'teacher_name': teacher_name})
 
 last_expression = None
 @app.route('/save_expression', methods=['POST'])
