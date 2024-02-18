@@ -20,6 +20,10 @@
     "icons": {
         "16": "./app/images/icon16.png"
     },
+    "background": {
+        "service_worker": "./app/background/background.js",
+        "type": "module"
+    },
     "action": {
         "default_icon": "./app/images/icon16.png",
         "default_popup": "./app/popup/popup.html"
