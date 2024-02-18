@@ -397,38 +397,39 @@ const main = async () => {
         break
       }
       }, 200)
+    }
+    
 
       const startNannyOverlay = async (command) => {
+        console.log(0)
         openOverlay()
         img.src = await chrome.runtime.getURL('app/images/nanny.gif')
-        const loop = setInterval(async () => {
-          switch (command) {
+        const contentPic = document.createElement('img')
+        switch (command) {
           case 0:
             contentTop.innerHTML = `I know you are angry and it is okay to be.`
             contentBottom.innerHTML = `You should cool down by going for a walk, getting fresh air, or taking a break.`
             break
           case 1:
             contentTop.innerHTML = `I know you are sad but don't worry i'll cheer you up!`
-            contentPic.img.src = await chrome.runtime.getURL('app/images/meme.gif')
-            contentBottom.innerHTML = `I hope you find this meme funny!`
+            contentPic.src = await chrome.runtime.getURL('app/images/meme.gif')
+            // contentBottom.innerHTML = `I hope you find this meme funny!`
+            contentBottom.appendChild(contentPic)
             break
-          case 2:
-            contentTop.innerHTML = `Looks like you're really happy keep it up!`
-            contentBottom.innerHTML = `Jumping Jacks Completed: ${jumpCounter}`
-            if(jumpCounter >= num) {clearInterval(loop);closeOverlay()}
-            if(jumpCounter > lastCount) {
-              lastCount = jumpCounter
-            }
-            break
+            case 2:
+              contentTop.innerHTML = `Looks like you're really happy keep it up!`
+              contentPic.src = await chrome.runtime.getURL('app/images/Meme2.gif')
+              // contentBottom.innerHTML = `Keep doing what you're doing!`
+              contentBottom.appendChild(contentPic)
+              break
           default:
-            clearInterval(loop)
             ;closeOverlay()
             break
-          }
-          }, 200)
-  
+          
+          
         }
       }
+      
   img.src = await chrome.runtime.getURL('app/images/test.gif')
   overlay.appendChild(img)
   overlay.appendChild(content)
@@ -451,11 +452,20 @@ const main = async () => {
   if (isBlackListedSite(personas.coach.blackListSites)) startCoachOverlay(randomInt(0, 3), randomInt(3, 5))
     
     let loop = null
-    loop = setInterval(async () => {
-        // console.log('looping')
-        const data = await get_endpoint('get_everything')
-        if(!data){return}
 
+    const emotion = 5;
+    let emotionpop = false;
+    let happyCounter = 0;
+    let SadCounter = 0;
+    let AngryCounter = 0;
+
+    let previousex = null
+    loop = setInterval(async () => {
+      // console.log('looping')
+      const data = await get_endpoint('get_everything')
+      if(!data){return}
+        
+      
         const expression = data.expression
         const shoulder_position = data.shoulder_position
         const hand_position = data.hand_position
@@ -464,7 +474,30 @@ const main = async () => {
 
         // ___________________________________________NANNY______________________________________________________
         if (personas.nanny.active) {
+          console.log(expression)
+          if(expression === 'sad' && previousex === 'sad') {
+            SadCounter++
+          } else SadCounter = 0
 
+          if (expression === 'happy' && previousex === 'happy') {
+            happyCounter++
+          } else happyCounter = 0 
+          
+          if (expression === 'angry' && previousex === 'angry') {
+            AngryCounter++
+          } else AngryCounter = 0
+
+          previousex = expression
+          if (SadCounter === emotion && !emotionpop) {
+            startNannyOverlay(1)
+            emotionpop = true
+          } else if (happyCounter === emotion && !emotionpop) {
+            startNannyOverlay(2)
+            emotionpop = true
+          } else if (AngryCounter === emotion && !emotionpop) {
+            startNannyOverlay(0)
+            emotionpop = true
+          }
          
         }
         
