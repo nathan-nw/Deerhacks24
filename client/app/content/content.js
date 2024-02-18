@@ -194,10 +194,11 @@ const isWithinActiveHours = () => {
 }
 
 const isBlackListedSite = (sites) => {
-  const current_url = window.location.href
+  const current_url = window.location.origin
+  console.log(current_url)
   for (let i = 0; i < sites.length; i++) {
       const blackListSite = sites[i]
-      if (current_url === blackListSite) {
+      if (current_url.includes(blackListSite) || current_url === blackListSite || blackListSite.includes(current_url)) {
           return true
       }
   }
@@ -340,15 +341,25 @@ content.appendChild(contentTop)
 content.appendChild(contentBottom)
 
 const main = async () => {
+  let overlayInUse = false
+
   const openOverlay = async () => {
     overlay.style.opacity = 1
     overlay.style.pointerEvents = 'all'
+
+    contentTop.innerHTML = ''
+    contentBottom.innerHTML = ''
+
+    overlayInUse = true
   }
   const closeOverlay = async () => {
     overlay.style.opacity = 0
     overlay.style.pointerEvents = 'none'
+    overlayInUse = false
   }
+
   const startCoachOverlay = async (command, num) => {
+    if(overlayInUse) return
     openOverlay()
     jumpCounter = 0
     squatCounter = 0
@@ -398,40 +409,46 @@ const main = async () => {
         break
       }
       }, 200)
-    }
-    
+  }
 
-      const startNannyOverlay = async (command) => {
-        console.log(0)
-        openOverlay()
-        img.src = await chrome.runtime.getURL('app/images/nanny.gif')
-        const contentPic = document.createElement('img')
-        switch (command) {
-          case 0:
-            contentTop.innerHTML = `I know you are angry and it is okay to be.`
-            contentBottom.innerHTML = `You should cool down by going for a walk, getting fresh air, or taking a break.`
-            break
-          case 1:
-            contentTop.innerHTML = `I know you are sad but don't worry i'll cheer you up!`
-            contentPic.src = await chrome.runtime.getURL('app/images/meme.gif')
-            // contentBottom.innerHTML = `I hope you find this meme funny!`
-            contentBottom.appendChild(contentPic)
-            break
-            case 2:
-              contentTop.innerHTML = `Looks like you're really happy keep it up!`
-              contentPic.src = await chrome.runtime.getURL('app/images/Meme2.gif')
-              // contentBottom.innerHTML = `Keep doing what you're doing!`
-              contentBottom.appendChild(contentPic)
-              break
-          default:
-            ;closeOverlay()
-            break
-          
-          
-        }
-      }
+  const startNannyOverlay = async (command) => {
+    console.log(overlayInUse)
+    if(overlayInUse) return
+    openOverlay()
+    img.src = await chrome.runtime.getURL('app/images/nanny.gif')
+    const contentPic = document.createElement('img')
+    contentPic.className = 'content-pic'
+    switch (command) {
+      case 0:
+        contentTop.innerHTML = `I know you are angry and it is okay to be.`
+        contentBottom.innerHTML = `You should cool down by going for a walk, getting fresh air, or taking a break.`
+        break
+      case 1:
+        contentTop.innerHTML = `I know you are sad but don't worry i'll cheer you up!`
+        contentPic.src = await chrome.runtime.getURL('app/images/meme.gif')
+        // contentBottom.innerHTML = `I hope you find this meme funny!`
+        contentBottom.appendChild(contentPic)
+        break
+        case 2:
+          contentTop.innerHTML = `Looks like you're really happy keep it up!`
+          contentPic.src = await chrome.runtime.getURL('app/images/Meme2.gif')
+          // contentBottom.innerHTML = `Keep doing what you're doing!`
+          contentBottom.appendChild(contentPic)
+          break
+        case 3:
+          contentTop.innerHTML = `You are on a blacklisted site during active hours`
+          contentBottom.innerHTML = `You should be doing something else`
+        break
+      default:
+        ;closeOverlay()
+        break
+      
+      
+    }
+  }
 
   const startTeacherOverlay = async () => {
+    if (overlayInUse) return
     openOverlay()
     contentBottom.innerHTML = `Waiting For Response...`
     // const loop = setInterval(async () => {
@@ -451,14 +468,11 @@ const main = async () => {
   const withinActiveHours = isWithinActiveHours()
   const blackListedSite = isBlackListedSite(personas.nanny.blackListSites)
 
-    if (!withinActiveHours && blackListedSite) {
-        console.log('You are on a blacklisted site during active hours')
-        window.location.href = 'https://www.google.com/'
-    }
-
-    if (personas.nanny.monitor) { 
-        
-    }
+  console.log(withinActiveHours, blackListedSite)
+  if (!withinActiveHours && blackListedSite) {
+      console.log('You are on a blacklisted site during non-active hours')
+      startNannyOverlay(3)
+  }
 
 
   if (isBlackListedSite(personas.coach.blackListSites)) startCoachOverlay(randomInt(0, 3), randomInt(3, 5))

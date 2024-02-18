@@ -29,11 +29,9 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    padding: 1rem;
-    border-radius: 1rem;
-    background-color: rgba(0,0,0,0.5);
-    backdrop-filter: blur(10px);
-
+    
+    background-color: transparent;
+    
 }
 .overlay .content .content-top{
     width: 100%;
@@ -41,10 +39,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
-    font-size: 2em;
+    
+    font-size: 3rem;
     font-weight: bold;
     font-family: 'GTWalsheimPro-Regular', sans-serif;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    padding: 1rem;
 }
 .overlay .content .content-bottom{
     width: 100%;
@@ -52,14 +54,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    padding: 1rem;
 }
 
 .overlay .content .content-pic{
-    width: 100%;
-    height: 70%;
+    width: 80%;
+    /* height: 70%; */
     display: flex;
     align-items: right;
     justify-content: right;
+
+    border-radius: 1rem;
 }
 
 @font-face {font-family: 'GTWalsheimPro-Regular';src: url('https://cdn.shopify.com/s/files/1/0588/4228/4186/files/GTWalsheimPro-Regular.woff?v=1669253354') format('woff');} 
