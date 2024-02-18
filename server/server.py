@@ -31,7 +31,7 @@ def getShoulderPosition():
     return jsonify({'status': 'ok', 'shoulder_position': last_shoulder_position})
 
 
-last_hand_position = None # (left shoulder, right shoulder)
+last_hand_position = None # (hand shoulder, hand shoulder)
 @app.route('/save_hand_position', methods=['Post'])
 def saveHandPosition():
     global last_hand_position
@@ -52,11 +52,31 @@ def getHandPosition():
     return jsonify({'status': 'ok', 'hand_position': last_hand_position})
 
 
+last_elbo_position = None # (left elbo, right elbo)
+@app.route('/save_elbo_position', methods=['Post'])
+def saveElboPosition():
+    global last_elbo_position
+    
+    data = request.json
+    print(data)
+    
+    if 'position' not in data:
+        return jsonify({'status': 'error', 'message': 'Position not found'})
+    
+    last_elbo_position = data['position']
+    
+    return jsonify({'status': 'ok'})
+
+@app.route('/get_elbo_position', methods=['Get'])
+def getElboPosition():
+    global last_elbo_position
+    return jsonify({'status': 'ok', 'elbo_position': last_elbo_position})
+
 # everything else ___________________________________________________________________________________
 @app.route('/get_everything', methods=['Get'])
 def getEverything():
     global last_expression, last_shoulder_position
-    return jsonify({'status': 'ok', 'expression': last_expression, 'shoulder_position': last_shoulder_position, 'hand_position': last_hand_position})
+    return jsonify({'status': 'ok', 'expression': last_expression, 'shoulder_position': last_shoulder_position, 'hand_position': last_hand_position, 'elbo_position': last_elbo_position})
 
 last_expression = None
 @app.route('/save_expression', methods=['POST'])
