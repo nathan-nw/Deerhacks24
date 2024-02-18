@@ -104,18 +104,21 @@ nanny_name = 'Sally'
 coach_name = 'Sam'
 teacher_name = 'Alex'
 
-@app.route('/save_name/<role>', methods=['POST'])
-def save_name(role):
+@app.route('/save_name', methods=['POST'])
+def save_name():
     global nanny_name, coach_name, teacher_name
     data = request.json
+    print(data)
     if 'name' not in data:
         return jsonify({'status': 'error', 'message': 'name not found'})
+    if 'role' not in data:
+        return jsonify({'status': 'error', 'message': 'role not found'})
     
-    if role == 'nanny':
+    if int(data['role']) == 0:
         nanny_name = data['name']
-    elif role == 'coach':
+    elif int(data['role']) == 1:
         coach_name = data['name']
-    elif role == 'teacher':
+    elif int(data['role']) == 2:
         teacher_name = data['name']
     else:
         return jsonify({'status': 'error', 'message': 'Invalid role'})

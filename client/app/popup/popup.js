@@ -1,4 +1,4 @@
-const OPENAI_API_KEY = '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'
+const OPENAI_API_KEY = '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'
 
 const GPT_INFO = {
     GPT_ENDPOINT: "https://api.openai.com/v1/chat/completions",
@@ -53,23 +53,24 @@ const queryChat = async (chatHistory, imageData = null, chat_model = 0) => {
     }
 }
 
-function changeName(role, name) {
-    fetch('/save_name/' + role, {
+async function changeName(role, name) {
+
+    await fetch('http://127.0.0.1:5000/save_name', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: name }),
+        body: JSON.stringify({ name:name, role:role}),
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        if (data.status === 'ok') {
-            document.getElementById(role).querySelector('.text').textContent = 'talk to me, ' + name + '!';
-        } else {
-            alert(data.message);
-        }
-    })
+    // .then(response => response.json())
+    // .then(data => {
+    //     console.log(data);
+    //     if (data.status === 'ok') {
+    //         document.getElementById(role).querySelector('.text').textContent = 'talk to me, ' + name + '!';
+    //     } else {
+    //         alert(data.message);
+    //     }
+    // })
     .catch(error => {
         console.error('Error:', error);
     });
@@ -128,7 +129,7 @@ const showTextInPopup = (text, person) => {
     }
 }
 
-const input = document.querySelector('input');
+const input = document.querySelector('#prompt-input');
 input.addEventListener('keydown', (event) => {
     console.log('keydown');
 
@@ -149,5 +150,18 @@ input.addEventListener('keydown', (event) => {
         // console.log(data)
         showTextInPopup(data, i)
 
+    })
+})
+
+const nanny = document.getElementById('nanny')
+const coach = document.getElementById('coach')
+const teacher = document.getElementById('teacher')
+const personaEements = [nanny, coach, teacher]
+
+personaEements.forEach((persona, index)=>{
+    console.log(persona)
+    const input = persona.querySelector('input')
+    input.addEventListener('keydown', ()=>{
+        changeName(index, input.value)
     })
 })
