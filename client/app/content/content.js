@@ -398,7 +398,38 @@ const main = async () => {
         break
       }
       }, 200)
-  }
+
+      const startNannyOverlay = async (command) => {
+        openOverlay()
+        img.src = await chrome.runtime.getURL('app/images/nanny.gif')
+        const loop = setInterval(async () => {
+          switch (command) {
+          case 0:
+            contentTop.innerHTML = `I know you are angry and it is okay to be.`
+            contentBottom.innerHTML = `You should cool down by going for a walk, getting fresh air, or taking a break.`
+            break
+          case 1:
+            contentTop.innerHTML = `I know you are sad but don't worry i'll cheer you up!`
+            contentPic.img.src = await chrome.runtime.getURL('app/images/meme.gif')
+            contentBottom.innerHTML = `I hope you find this meme funny!`
+            break
+          case 2:
+            contentTop.innerHTML = `Looks like you're really happy keep it up!`
+            contentBottom.innerHTML = `Jumping Jacks Completed: ${jumpCounter}`
+            if(jumpCounter >= num) {clearInterval(loop);closeOverlay()}
+            if(jumpCounter > lastCount) {
+              lastCount = jumpCounter
+            }
+            break
+          default:
+            clearInterval(loop)
+            ;closeOverlay()
+            break
+          }
+          }, 200)
+  
+        }
+      }
   img.src = await chrome.runtime.getURL('app/images/test.gif')
   overlay.appendChild(img)
   overlay.appendChild(content)
