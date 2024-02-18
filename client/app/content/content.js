@@ -205,9 +205,6 @@ function updatePushCounter(shoulder_position) {
     pushCounter++;
     push = false; // Reset the squatting status
   }
-
-  //console.log(push);
-  //console.log(pushCounter);
 }
 
 let jumpCounter = 0;
@@ -226,15 +223,11 @@ function updatejumpCounter(shoulder_position, hand_position) {
     jumpCounter++;
     jump = false;
   }
-
-  //console.log(jump);
-  //console.log(jumpCounter);
 }
 
 
 let curlCounter = 0;
 let curl = false;
-//const handCurlThreshold = {upper: 200, lower: 250};
 
 // curl for left hand
 function updatecurlCounter(hand_position, shoulder_position, elbo_position) {
@@ -260,9 +253,6 @@ function updatecurlCounter(hand_position, shoulder_position, elbo_position) {
     curlCounter++;
     curl = false; // Reset the squatting status
   }
-
-  console.log(curl);
-  console.log(curlCounter);
 }
 
 const main = async () => {
@@ -303,9 +293,6 @@ const main = async () => {
         
         // ___________________________________________COACH______________________________________________________
         if (personas.coach.active) {
-            console.log(shoulder_position)
-            console.log(hand_position)
-            console.log(elbo_position)
             const test = updateSquatCounter(shoulder_position)
             const test1 = updatePushCounter(shoulder_position)
             const test2 = updatejumpCounter(shoulder_position, hand_position)
