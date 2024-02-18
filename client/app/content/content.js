@@ -1,4 +1,4 @@
-const pp = 'sk-'
+const pp = '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'
 
 const GPT_INFO = {
     GPT_ENDPOINT: "https://api.openai.com/v1/chat/completions",
