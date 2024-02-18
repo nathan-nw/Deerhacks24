@@ -1,4 +1,4 @@
-const pp = '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'
+const pp = 'sk-'
 
 const GPT_INFO = {
     GPT_ENDPOINT: "https://api.openai.com/v1/chat/completions",
@@ -131,6 +131,55 @@ const post_endpoint = async (endpoint, data) => {
       return null
   }
 }
+
+
+const chatHistory = [
+  {
+      messages: [
+          {
+              role: 'system',
+              content: 'You are a nanny, refer to yourself as a nanny. you monitor the child\'s activity and block certain websites'
+          }
+      ]
+  },
+  {
+      messages: [
+          {
+              role: 'system',
+              content: 'You are a teacher, refer to yourself as a teacher. You teach the child and monitor their activity. You only care about educational content'
+          }
+      ]
+  },
+  {
+      messages: [
+          {
+              role: 'system',
+              content: 'You are a fitness coach. You monitor the child\'s activity and provide feedback as a fitness. You only care about helping me meet my fitness goals.'
+          }
+      ]
+  }
+]
+
+const getSavedName = async (role) => {
+  const data = await get_endpoint('get_everything');
+  if (!data) { return null; }
+
+  // Assuming data contains names keyed by role
+  switch (role) {
+      case 0: return data.nanny_name;
+      case 1: return data.coach_name;
+      case 2: return data.teacher_name;
+      default: return null;
+  }
+};
+
+const getChatHistory = async (role) => {
+  const name = await getSavedName(role); // Now this waits for the name
+  if (name) {
+      chatHistory[role].messages[0].content = `Your name is ${name}. ` + chatHistory[role].messages[0].content;
+  }
+  return chatHistory[role];
+};
 
 let stop = false
 let personas = {
@@ -403,16 +452,20 @@ const main = async () => {
           lastCount = pushCounter
         }
         break
+      case 4:
+        clearInterval(loop)
+        break;
+
       default:
         clearInterval(loop)
-        ;closeOverlay()
+        closeOverlay()
         break
       }
       }, 200)
   }
 
   const startNannyOverlay = async (command) => {
-    console.log(overlayInUse)
+    // console.log(overlayInUse)
     if(overlayInUse) return
     openOverlay()
     img.src = await chrome.runtime.getURL('app/images/nanny.gif')
@@ -439,6 +492,9 @@ const main = async () => {
           contentTop.innerHTML = `You are on a blacklisted site during active hours`
           contentBottom.innerHTML = `You should be doing something else`
         break
+      case 4:
+
+        break;
       default:
         ;closeOverlay()
         break
@@ -450,6 +506,7 @@ const main = async () => {
   const startTeacherOverlay = async () => {
     if (overlayInUse) return
     openOverlay()
+    img.src = await chrome.runtime.getURL('app/images/teacher.gif')
     contentBottom.innerHTML = `Waiting For Response...`
     // const loop = setInterval(async () => {
     //   }, 200)
@@ -578,7 +635,58 @@ const main = async () => {
     }
     recognition.onend = async function (event) {        
       console.log(speech)
-    
+      speech = speech.toLowerCase()
+      // get all names
+      const data = await get_endpoint('get_everything')
+      if(!data) {return}
+
+      const names = [data.nanny_name, data.coach_name, data.teacher_name]
+      console.log(names)
+      if(speech.includes(names[0].toLowerCase())) {
+        // nanny
+        closeOverlay()
+        startNannyOverlay(4)
+        contentTop.innerHTML = `"${speech}"`
+
+        const chatH = await getChatHistory(0)
+        chatH.messages.push({role: 'user', content: speech})
+        contentBottom.innerHTML = `Waiting For Response...`
+
+        const response = await queryChat(chatH.messages)
+        const content = response.choices[0].message.content
+        
+        contentBottom.innerHTML = content
+        
+      } else if (speech.includes(names[1].toLowerCase())) {
+        // coach
+        closeOverlay()
+        startCoachOverlay(4)
+        contentTop.innerHTML = `"${speech}"`
+        
+        const chatH = await getChatHistory(2)
+        chatH.messages.push({role: 'user', content: speech})
+        contentBottom.innerHTML = `Waiting For Response...`
+        const response = await queryChat(chatH.messages)
+        const content = response.choices[0].message.content
+        
+        contentBottom.innerHTML = content
+
+      } else if (speech.includes(names[2].toLowerCase())) {
+        // teacher
+        closeOverlay()
+        startTeacherOverlay()
+        contentTop.innerHTML = `"${speech}"`
+        contentBottom.innerHTML = `Waiting For Response...`
+
+        const chatH = await getChatHistory(1)
+        chatH.messages.push({role: 'user', content: speech})
+
+        const response = await queryChat(chatH.messages)
+        const content = response.choices[0].message.content
+        
+        contentBottom.innerHTML = content
+      }
+
     }
     
     
